@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-##
+
 import torch
 import torch.nn.functional as F
 from torch.cuda.amp import GradScaler, autocast
@@ -9,8 +9,16 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from utils import save_config_file, accuracy, save_checkpoint
 
-torch.manual_seed(0)
-
+torch.manual_seed(0)#保证初始化的权重不变
+'''
+系统的随机数种子为random.seed()，这个不能代替torch.manual_seed().
+如果是想固定pytorch里的某些东西，那么必须是用torch.manual_seed()，而不是random.seed()
+'''
+'''
+使用pytorch复现效果时, 总是无法做到完全的复现. 同一份代码运行两次, 有时结果差异很大. 这是由于算法中的随机性导致的. 要想每次获得的结果一致, 必须固定住随机种子. 
+首先, 我们需要找到算法在哪里使用了随机性, 再相应的固定住随机种子.
+这时候用torch.manual_seed()
+'''
 
 class SimCLR(object):
 
